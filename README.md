@@ -39,7 +39,72 @@ The most important requirements are:
 * `timm`. To load vision models used for image benchmarks.
 * `wandb`. To run hyperparameter sweeps.
 
+It is also required that you have access to the datasets that you want to run as
+benchmarks.
+
 ## File Structure
+```
+.
+├── capture_dataset_images.py
+├── data
+│   ├── augmix_transforms.py
+│   ├── dataloaders.py
+│   ├── datasets.py
+│   ├── data_transforms.py
+│   ├── __init__.py
+├── eval_chkp.py
+├── generate_circles_data.py
+├── logs
+├── losses
+│   └── __init__.py
+├── models
+│   ├── circles_model.py
+│   ├── cmnist_model.py
+│   ├── custom_head_domino.py
+│   ├── gating_model.py
+│   ├── __init__.py
+│   ├── model_utils.py
+│   ├── preresnet.py
+│   └── text_models.py
+├── multi_layer.py
+├── notebooks
+│   ├── celeba_tuning.ipynb
+│   ├── chest-x-ray.py
+│   ├── dfr_comparision.ipynb
+│   ├── lbfgs_example.py
+│   ├── loss_plot.py
+│   ├── mixed-chest-x-ray.py
+│   ├── mnli.ipynb
+│   ├── plot_fig1.py
+│   ├── plot_jtt_early.py
+│   ├── plot_jtt_heatmap.py
+│   ├── plot_jtt_upweight.py
+│   ├── plot_scale.py
+│   ├── plot_time_bars.py
+│   ├── plot_val_exp.py
+│   ├── wb_celeba.ipynb
+│   └── wb_tuning.ipynb
+├── optimizers
+│   └── __init__.py
+├── README.md
+├── scripts
+├── setup.cfg
+├── show_images.py
+├── train_2_steps.py
+├── train_dfr.py
+├── train_edfr.py
+├── train_embeddings.py
+├── train_jtt.py
+├── train_phases.py
+├── train_supervised.py
+└── utils
+    ├── common_utils.py
+    ├── general.py
+    ├── __init__.py
+    ├── logging.py
+    ├── logging_utils.py
+    └── supervised_utils.py
+```
 
 ## Experiments
 
