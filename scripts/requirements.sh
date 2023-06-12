@@ -5,3 +5,4 @@ python3 -m pip install pandas --no-cache-dir
 python3 -m pip install timm --no-cache-dir
 python3 -m pip install einops --no-cache-dir
 python3 -m pip install wandb --no-cache-dir
+python3 -m pip install wilds
