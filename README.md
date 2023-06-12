@@ -52,49 +52,21 @@ benchmarks.
 │   ├── data_transforms.py
 │   ├── __init__.py
 ├── logs --> where experimental results get saved
-├── losses --> contains the loss functions used
+├── losses --> comprises the loss functions used
 │   └── __init__.py
-├── models
-│   ├── circles_model.py
-│   ├── cmnist_model.py
-│   ├── custom_head_domino.py
-│   ├── gating_model.py
-│   ├── __init__.py
+├── models --> incorporates all the model definitions used in the experiments
+│   ├── __init__.py  --> most model definitions
 │   ├── model_utils.py
 │   ├── preresnet.py
 │   └── text_models.py
-├── multi_layer.py
-├── notebooks
-│   ├── celeba_tuning.ipynb
-│   ├── chest-x-ray.py
-│   ├── dfr_comparision.ipynb
-│   ├── lbfgs_example.py
-│   ├── loss_plot.py
-│   ├── mixed-chest-x-ray.py
-│   ├── mnli.ipynb
-│   ├── plot_fig1.py
-│   ├── plot_jtt_early.py
-│   ├── plot_jtt_heatmap.py
-│   ├── plot_jtt_upweight.py
-│   ├── plot_scale.py
-│   ├── plot_time_bars.py
-│   ├── plot_val_exp.py
-│   ├── wb_celeba.ipynb
-│   └── wb_tuning.ipynb
-├── optimizers
+├── optimizers --> has the optimizers used in the experiments
 │   └── __init__.py
 ├── README.md
 ├── scripts
-├── setup.cfg
-├── show_images.py
-├── train_2_steps.py
-├── train_dfr.py
-├── train_edfr.py
-├── train_embeddings.py
-├── train_jtt.py
-├── train_phases.py
-├── train_supervised.py
-└── utils
+├── setup.cfg --> yapf linter settings used in the project
+├── train_embeddings.py --> main script to train from embeddings (second stage)
+├── train_supervised.py --> main script used to run checkpoints (first stage)
+└── utils --> utils to run experiments, log results and track metrics
     ├── common_utils.py
     ├── general.py
     ├── __init__.py
@@ -103,8 +75,6 @@ benchmarks.
     └── supervised_utils.py
 ```
 
-## Experiments
+## Experiments / Examples
 
 ## Variables / Arguments
-
-## Examples
