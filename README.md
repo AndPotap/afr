@@ -63,6 +63,7 @@ benchmarks.
 │   └── __init__.py
 ├── README.md
 ├── scripts
+│   └── requirements.sh
 ├── setup.cfg --> yapf linter settings used in the project
 ├── train_embeddings.py --> main script to train from embeddings (second stage)
 ├── train_supervised.py --> main script used to run checkpoints (first stage)
@@ -75,6 +76,102 @@ benchmarks.
     └── supervised_utils.py
 ```
 
-## Experiments / Examples
+## Running AFR
+### First Stage
+To replicate the experimental results, run the following commands.
+We now show the command line arguments that need to be run for the first and
+second stage. On the next section we explain each of the variables in detail.
+Using waterbirds as an example, for the first stage run
+```shell
+ARCH='imagenet_resnet50_pretrained'
+DATA_DIR='/datasets/waterbirds_official'
+SEED=21
+PROP=80
+OMP_NUM_THREADS=4 python3 train_supervised.py \
+    --output_dir=logs/waterbirds/${PROP}_${SEED} \
+    --project=waterbirds \
+    --seed=${SEED} \
+    --eval_freq=10 \
+    --save_freq=10 \
+    --data_dir=${DATA_DIR} \
+    --data_transform=AugWaterbirdsCelebATransform \
+    --model=${ARCH} \
+    --train_prop=${PROP} \
+    --num_epochs=40 \
+    --batch_size=32 \
+    --optimizer=sgd_optimizer \
+    --scheduler=constant_lr_scheduler \
+    --init_lr=0.003 \
+    --weight_decay=1e-4 \
+```
+| Name | Description |
+| :------------ |  :-----------: |
+| `output_dir` | Specifies where the results are saved. |
+| `project` | Name of the wandb project. |
+| `seed` | Seed to use. |
+| `eval_freq` | How often (in epochs) to evaluate the current model on the validation set. |
+| `save_freq` | How often (in epochs) to save a model checkpoint. |
+| `data_dir` | File path where the dataset is located. |
+| `data_transform` | Type of augmentation being used. |
+| `model` | Model architecture. |
+| `train_prop` | % of train dataset to use for the 1st stage. |
+| `num_epochs` | Number of epochs to run. |
+| `batch_size` | Size of the mini-batches. |
+| `optimizer` | Type of optimizer to use. |
+| `scheduler` | Type of scheduler to use. |
+| `init_lr` | Initial learning rate (starting point for the scheduler). |
+| `weight_decay` | Weight decay value. |
 
-## Variables / Arguments
+### Second Stage
+To run the second stage in our waterbirds example use the following command
+```shell
+ARCH='imagenet_resnet50_pretrained'
+DATA_DIR='/datasets/waterbirds_official'
+SEED=1
+PROP=80
+TRAIN_PROP=$(($PROP - 100))
+BASE_MODEL="./logs/waterbirds/$PROP_$SEED"
+OMP_NUM_THREADS=4 python3 train_embeddings.py \
+    --output_dir=logs/waterbirds/emb \
+    --project=waterbirds \
+    --seed=21 \
+    --base_model_dir=${BASE_MODEL} \
+    --model=${ARCH} \
+    --data_dir=${DATA_DIR} \
+    --data_transform=AugWaterbirdsCelebATransform\
+    --num_epochs=500 \
+    --batch_size=128 \
+    --optimizer=sgd_optimizer \
+    --scheduler=constant_lr_scheduler \
+    --init_lr=0.02 \
+    --weight_decay=0. \
+    --loss=fixed_cwxe \
+    --train_prop=${TRAIN_PROP} \
+    --focal_loss_gamma=14 \
+    --num_augs=10 \
+    --grad_norm=0.0 \
+    --reg_coeff=0.2 \
+```
+| Name | Description |
+| :------------ |  :-----------: |
+| `output_dir` | Specifies where the results are saved. |
+| `project` | Name of the wandb project. |
+| `seed` | Seed to use. |
+| `base_model_dir` | Location of the first stage checkpoint. |
+| `model` | Model architecture. |
+| `data_dir` | File path where the dataset is located. |
+| `data_transform` | Type of augmentation being used. |
+| `num_epochs` | Number of epochs to run. |
+| `batch_size` | Size of the mini-batches. |
+| `optimizer` | Type of optimizer to use. |
+| `scheduler` | Type of scheduler to use. |
+| `init_lr` | Initial learning rate (starting point for the scheduler). |
+| `weight_decay` | Weight decay value. |
+| `loss` | Name of loss function to be used. |
+| `train_prop` | % of train dataset use for 2nd stage (should be negative). |
+| `focal_loss_gamma` | Gamma value. |
+| `num_augs` | Number of augmentations to use for embeddings. |
+| `grad_norm` | Gradient norm cap. |
+| `reg_coeff` | Regularization coefficient. |
+
+## Examples
