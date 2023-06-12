@@ -45,17 +45,14 @@ benchmarks.
 ## File Structure
 ```
 .
-├── capture_dataset_images.py
-├── data
+├── data --> groups several utils for loading dataset and augmentations
 │   ├── augmix_transforms.py
 │   ├── dataloaders.py
-│   ├── datasets.py
+│   ├── datasets.py --> contains the base clases for managing the datasets and groups
 │   ├── data_transforms.py
 │   ├── __init__.py
-├── eval_chkp.py
-├── generate_circles_data.py
-├── logs
-├── losses
+├── logs --> where experimental results get saved
+├── losses --> contains the loss functions used
 │   └── __init__.py
 ├── models
 │   ├── circles_model.py
