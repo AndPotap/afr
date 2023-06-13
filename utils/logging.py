@@ -29,7 +29,7 @@ class TrainLogger:
         self.metrics = {epoch: {} for epoch in range(args.num_epochs + 1)}
 
     def initialize_logging(self, args):
-        args.output_dir = add_timestamp_with_random(args.output_dir, ending='')
+        # args.output_dir = add_timestamp_with_random(args.output_dir, ending='')
         os.makedirs(args.output_dir, exist_ok=True)
         logger = prepare_logger(args.output_dir)
         if self.use_wandb:

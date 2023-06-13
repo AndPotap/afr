@@ -189,7 +189,7 @@ OMP_NUM_THREADS=4 python3 train_embeddings.py \
 To run AFR on Waterbirds use the following two commands.
 ```shell
 python3 train_supervised.py --use_wandb="" --output_dir=logs/waterbirds/80_21 --project=waterbirds --seed=21 --eval_freq=10 --save_freq=10 --data_dir='/datasets/waterbirds_official' --dataset=SpuriousDataset --data_transform=AugWaterbirdsCelebATransform --model='imagenet_resnet50_pretrained' --max_prop=1.0 --train_prop=80 --num_epochs=40 --batch_size=32 --optimizer=sgd_optimizer --scheduler=constant_lr_scheduler --init_lr=0.003 --weight_decay=1e-4
-python3 train_embeddings.py --use_wandb="" --output_dir=logs/waterbirds/emb --project=waterbirds --seed=98 --base_model_dir=./logs/waterbirds/80_21/20230612_214538_GuO8 --model=imagenet_resnet50_pretrained --data_dir=/datasets/waterbirds_official --data_transform=AugWaterbirdsCelebATransform --num_epochs=500 --batch_size=128 --emb_batch_size=-1 --optimizer=sgd_optimizer --scheduler=constant_lr_scheduler --init_lr=0.05 --momentum=0. --weight_decay=0. --loss=fixed_cwxe --tune_on=train --train_prop=-20 --focal_loss_gamma=10 --num_augs=1 --grad_norm=0.0 --reg_coeff=0.0
+python3 train_embeddings.py --use_wandb="" --output_dir=logs/waterbirds/emb --project=waterbirds --seed=98 --base_model_dir=./logs/waterbirds/80_21 --model=imagenet_resnet50_pretrained --data_dir=/datasets/waterbirds_official --data_transform=AugWaterbirdsCelebATransform --num_epochs=500 --batch_size=128 --emb_batch_size=-1 --optimizer=sgd_optimizer --scheduler=constant_lr_scheduler --init_lr=0.05 --momentum=0. --weight_decay=0. --loss=fixed_cwxe --tune_on=train --train_prop=-20 --focal_loss_gamma=10 --num_augs=1 --grad_norm=0.0 --reg_coeff=0.0
 ```
 The first command runs the 1st stage of AFR and saves the checkpoint on
 `logs/waterbirds/80_21`.
@@ -199,7 +199,7 @@ wandb simply take that flag out of the command.
 
 To run AFR on CelebA use the following two commands. 
 ```shell
-python3 train_supervised.py --use_wandb="" --output_dir=logs/celeba/80_123 --project=celeba --seed=123 --eval_freq=1 --save_freq=2 --data_dir='/datasets/CelebA' --data_transform=AugWaterbirdsCelebATransform --model='imagenet_resnet50_pretrained' --max_prop=1.0 --train_prop=80 --num_epochs=20 --batch_size=100 --optimizer=sgd_optimizer --scheduler=cosine_lr_scheduler --init_lr=3e-3 --weight_decay=1e-4
+python3 train_supervised.py --use_wandb="" --output_dir=logs/celeba/80_123 --project=celeba --seed=123 --eval_freq=10 --save_freq=10 --data_dir='/datasets/CelebA' --data_transform=AugWaterbirdsCelebATransform --model='imagenet_resnet50_pretrained' --max_prop=1.0 --train_prop=80 --num_epochs=20 --batch_size=100 --optimizer=sgd_optimizer --scheduler=cosine_lr_scheduler --init_lr=3e-3 --weight_decay=1e-4
 python3 train_embeddings.py --use_wandb="" --output_dir=logs/celeba/emb --project=celeba --seed=1 --base_model_dir="./logs/celeba/80_123" --model='imagenet_resnet50_pretrained' --data_dir='/datasets/CelebA' --data_transform=AugWaterbirdsCelebATransform --num_epochs=100 --batch_size=128 --emb_batch_size=-1 --optimizer=sgd_optimizer --scheduler=constant_lr_scheduler --init_lr=0.01 --momentum=0.0 --weight_decay=0. --loss=fixed_cwxe --tune_on=train --train_prop=-0.2 --focal_loss_gamma=1.8 --num_augs=1 --grad_norm=0.0 --reg_coeff=0.00 --checkpoint=final_checkpoint.pt
 ```
 
