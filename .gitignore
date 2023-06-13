@@ -1,0 +1,11 @@
+logs/*
+wandb/*
+*.ipynb_checkpoints
+*.tar.gz
+*.DS_Store
+*.out
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
