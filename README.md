@@ -202,12 +202,16 @@ Please follow the instructions in the [DFR repo](https://github.com/PolinaKirich
 
 ### CivilComments
 
-For CivilComments, we use the version of the dataset natively available in the [wilds package](https://wilds.stanford.edu/datasets/#civilcomments).
+For CivilComments, we use the version of the dataset natively available in the [WILDS package](https://wilds.stanford.edu/datasets/#civilcomments).
+
+We use the standard [WILDS ERM training scrtipts](https://github.com/p-lambda/wilds/tree/main#using-the-example-scripts) to train models on this dataset. 
 
 ### MultiNLI
 
 To run experiments on the MultiNLI dataset, please manually download and unzip the dataset from [this link](https://nlp.stanford.edu/data/dro/multinli_bert_features.tar.gz).
 Further, please copy the `dataset_files/utils_glue.py` to the root directory of the dataset.
+
+We train models on CivilComments using the code available in the [spurious_feature_learning](https://github.com/izmailovpavel/spurious_feature_learning).
 
 ### Chest X-Ray
 
