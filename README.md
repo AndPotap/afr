@@ -18,6 +18,16 @@ across a wide variety of benchmarks **without requiring group labels through tra
    AFR outperforms the baselines, while only requiring a small fraction of compute time.</figcaption>
 </figure>
 
+
+We summarize the worst group accuracy achieved by AFR and competing methods on benchmark datasets in the table below.
+
+| Method     | Waterbirds | CelebA | MultiNLI | CivilComments | Chest X-Ray |
+|------------|------------|--------|----------|---------------|-------------|
+| ERM        | 72.6       | 47.2   | 67.9     | 57.4          | 4.4         |
+| JTT        | 86.7       | 81.1   | 72.6     | 69.3          | 52.3        |
+| CNC        | 88.5       | 88.8   | -        | 68.9          | -           |
+| AFR (Ours) | 90.4       | 82.0   | 73.4     | 68.7          | 56.0        |
+
 ## Citation
 If you find AFR useful, please cite our work:
 ```bibtex
