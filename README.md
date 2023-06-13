@@ -3,14 +3,13 @@ This repository contains the code for the paper
 [_Simple and Fast Group Robustness by Automatic Feature Reweighting_](https://openreview.net/pdf?id=s5F1a6s1HS)
 by Shikai Qiu, Andres Potapczynski, Pavel Izmailov and Andrew Gordon Wilson (ICML 2023).
 
-## Motivation
-Robustness to spurious correlations is of foundational importance for the reliable application of machine learning systems in the real-world,
-where it is common that features learned during training fail to generalize or completely disregard minority groups.
-There has been an extraordinary progress in the development of approaches and principles that are applicable to tackling these problems
-but there has remained a significant open question: can we leverage these advances to develop approaches that do not require (1) knowledge of group labels, (2) manual intervention from experts, and (3) computationally intensive training procedures.
+## Introduction
 
-As a solution to the previous three limitations, we propose _Automatic Feature Reweighting_ (AFR), which is a group robustness method that is able to achieve **state-of-the-art results**
-across a wide variety of benchmarks **without requiring group labels through training**, and with **fast training times** that are only marginally longer than standard ERM.
+Robustness to spurious correlations is of foundational importance for the reliable deployment of machine learning systems in the real-world,
+where it is common that deep learning models fail to generalize on unusual examples and minority groups in the data.
+Standard methods for reducing the reliance on spurious features typically assume that we know what the spurious feature is, which is rarely true in the real world. Methods that attempt to alleviate this limitation are complex, hard to tune, and lead to a significant computational overhead compared to standard training.
+To address these limitations, we propose _Automatic Feature Reweighting_ (AFR), a simple method that is easy to implement, does not require group annotations on the training data or manual intervention from experts, and is computationally cheap to run and tune.
+
 
 <figure>
   <img src="./figs/wga.png" alt="Image">
@@ -18,7 +17,10 @@ across a wide variety of benchmarks **without requiring group labels through tra
    AFR outperforms the baselines, while only requiring a small fraction of compute time.</figcaption>
 </figure>
 
+<br>
+<br>
 
+AFR achieves **state-of-the-art results** across a wide variety of benchmarks **without requiring group labels through training**, and with **fast training times** that are only marginally longer than standard ERM.
 We summarize the worst group accuracy achieved by AFR and competing methods on benchmark datasets in the table below.
 
 | Method     | Waterbirds   | CelebA   | MultiNLI     | CivilComments | Chest X-Ray  |
