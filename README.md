@@ -73,6 +73,10 @@ benchmarks.
 │   └── text_models.py
 ├── optimizers --> has the optimizers used in the experiments
 │   └── __init__.py
+├── notebooks --> provides easy-to-use notebooks for running AFR on Waterbirds, CelebA, MultiNLI, and CivilComments
+│   ├── wb_celeba.ipynb
+│   ├── multnli.ipynb
+│   └── civil.ipynb
 ├── README.md
 ├── scripts
 │   └── requirements.sh
