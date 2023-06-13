@@ -189,11 +189,11 @@ OMP_NUM_THREADS=4 python3 train_embeddings.py \
 To run the 1st stage of CivilComments we used the Wilds implementation and hence run the
 following command
 ```shell
-OMP_NUM_THREADS=4 CUDA_VISIBLE_DEVICES=3 python3 run_expt.py --dataset civilcomments --algorithm ERM --root_dir /data/users/pavel_i/datasets/ --log_dir 'logs/bert_civilcomments_dfrdrop_2/' --seed 2 --dfr_reweighting_seed 2 --dfr_reweighting_drop --dfr_reweighting_frac 0.2 --model bert-base-uncased
+OMP_NUM_THREADS=4 python3 wilds_exps/run_expt.py --dataset civilcomments --algorithm ERM --root_dir /data/users/pavel_i/datasets/ --log_dir 'logs/bert_civilcomments_dfrdrop_2/' --seed 2 --dfr_reweighting_seed 2 --dfr_reweighting_drop --dfr_reweighting_frac 0.2 --model bert-base-uncased
 ```
 similarly for MultiNLI we run
 ```shell
-OMP_NUM_THREADS=4 CUDA_VISIBLE_DEVICES=5 python3 run_expt.py -s confounder -d MultiNLI -t gold_label_random -c sentence2_has_negation --lr 2e-05 --batch_size 32 --weight_decay 0 --model bert --n_epochs 3 --seed 1 --log_dir=logs/multinli/erm_dfrdrop1 --root_dir=/data/users/pavel_i/datasets/multinli/ --dfr_reweighting_drop --dfr_reweighting_seed=1 --dfr_reweighting_frac=0.2 --save_last --save_best
+OMP_NUM_THREADS=4 python3 run_expt.py -s confounder -d MultiNLI -t gold_label_random -c sentence2_has_negation --lr 2e-05 --batch_size 32 --weight_decay 0 --model bert --n_epochs 3 --seed 1 --log_dir=logs/multinli/erm_dfrdrop1 --root_dir=/data/users/pavel_i/datasets/multinli/ --dfr_reweighting_drop --dfr_reweighting_seed=1 --dfr_reweighting_frac=0.2 --save_last --save_best
 ```
 
 ## Examples
