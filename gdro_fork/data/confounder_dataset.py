@@ -4,7 +4,7 @@ import pandas as pd
 from PIL import Image
 import numpy as np
 import torchvision.transforms as transforms
-from models import model_attributes
+from gdro_fork.models import model_attributes
 from torch.utils.data import Dataset, Subset
 
 class ConfounderDataset(Dataset):
