@@ -21,12 +21,12 @@ across a wide variety of benchmarks **without requiring group labels through tra
 
 We summarize the worst group accuracy achieved by AFR and competing methods on benchmark datasets in the table below.
 
-| Method     | Waterbirds | CelebA | MultiNLI | CivilComments | Chest X-Ray |
-|------------|------------|--------|----------|---------------|-------------|
-| ERM        | 72.6       | 47.2   | 67.9     | 57.4          | 4.4         |
-| JTT        | 86.7       | 81.1   | 72.6     | 69.3          | 52.3        |
-| CNC        | 88.5       | 88.8   | -        | 68.9          | -           |
-| AFR (Ours) | 90.4       | 82.0   | 73.4     | 68.7          | 56.0        |
+| Method     | Waterbirds   | CelebA   | MultiNLI     | CivilComments | Chest X-Ray  |
+|------------|--------------|----------|--------------|---------------|--------------|
+| ERM        | 72.6         | 47.2     | 67.9         | 57.4          | 4.4          |
+| JTT        | 86.7         | 81.1     | 72.6         | 69.3          | 52.3         |
+| CNC        | 88.5±0.3     | 88.8±0.9 | -            | 68.9±2.1      | -            |
+| AFR (Ours) | **90.4±1.1** | 82.0±0.5 | **73.4±0.6** | 68.7±0.6      | **56.0±3.4** |
 
 ## Citation
 If you find AFR useful, please cite our work:
