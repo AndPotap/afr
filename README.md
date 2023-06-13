@@ -91,12 +91,10 @@ benchmarks.
     ├── logging_utils.py
     └── supervised_utils.py
 ```
-
 ## Running AFR
+We now show the command line arguments for running AFR's first and
+second stage. We explain the arguments in detail after each command. We also provide notebook implementations of AFR's second stage that take care of hyperparameter tuning and provide special support for MultiNLI and CivilComments due to different models and data formats. See "Running AFR in a Notebook". 
 ### First Stage
-To replicate the experimental results, run the following commands.
-We now show the command line arguments that need to be run for the first and
-second stage. On the next section we explain each of the variables in detail.
 Using waterbirds as an example, for the first stage run
 ```shell
 ARCH='imagenet_resnet50_pretrained'
@@ -218,6 +216,9 @@ Similarly for the 1st stage of MultiNLI run
 ```shell
 OMP_NUM_THREADS=4 python3 gdro_fork/run_expt.py -s confounder -d MultiNLI -t gold_label_random -c sentence2_has_negation --lr 2e-05 --batch_size 32 --weight_decay 0 --model bert --n_epochs 3 --seed 1 --log_dir=logs/multinli/erm_dfrdrop1 --root_dir=/data/users/pavel_i/datasets/multinli/ --dfr_reweighting_drop --dfr_reweighting_seed=1 --dfr_reweighting_frac=0.2 --save_last --save_best
 ```
+
+## Running AFR in a Notebook
+To facilitate reproducing results in the paper, the `notebooks` directory provide easy-to-use notebooks with self-contained code to run and tune AFR on Waterbirds, CelebA, MultiNLI, and CivilComments. You only need to modify a few path variables to use your own model checkpoints. Those variables can be located by searching for `TODO`. Separate notebooks exist for MultiNLI and CivilComments because they use models and data formats different from Waterbirds and CelebA that are not natively supported in our code base.
 
 ## Data Access
 
