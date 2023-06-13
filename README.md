@@ -1,6 +1,6 @@
 # Automatic Feature Reweighting (AFR)
-This repository contains the code for
-[Simple and Fast Group Robustness by Automatic Feature Reweighting](https://openreview.net/pdf?id=s5F1a6s1HS)
+This repository contains the code for the paper
+[_Simple and Fast Group Robustness by Automatic Feature Reweighting_](https://openreview.net/pdf?id=s5F1a6s1HS)
 by Shikai Qiu, Andres Potapczynski, Pavel Izmailov and Andrew Gordon Wilson (ICML 2023).
 
 ## Motivation
