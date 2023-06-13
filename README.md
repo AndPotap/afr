@@ -219,11 +219,14 @@ We use the standard [WILDS ERM training scrtipts](https://github.com/p-lambda/wi
 
 ### MultiNLI
 
-To run experiments on the MultiNLI dataset, please manually download and unzip the dataset from [this link](https://nlp.stanford.edu/data/dro/multinli_bert_features.tar.gz).
-Further, please copy the `dataset_files/utils_glue.py` to the root directory of the dataset.
+To run experiments on the MultiNLI dataset, manually download and unzip the dataset from [this link](https://nlp.stanford.edu/data/dro/multinli_bert_features.tar.gz).
+Then copy the `dataset_files/utils_glue.py` to the root directory of the dataset.
 
 We train models on CivilComments using the code available in the [spurious_feature_learning](https://github.com/izmailovpavel/spurious_feature_learning).
 
 ### Chest X-Ray
 
-ToDo
+The chest X-ray data that we used combines two sources: [CheXpert](https://stanfordmlgroup.github.io/competitions/chexpert/) 
+and [NIH](https://www.kaggle.com/datasets/nih-chest-xrays/data/code).
+Please place both datasets on the same folder. Our dataloader is expecting a `chexpert`
+folder containing the CheXpert data and a `nihcxr` folder containing the NIH data.
