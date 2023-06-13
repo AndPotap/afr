@@ -186,16 +186,6 @@ OMP_NUM_THREADS=4 python3 train_embeddings.py \
 | `grad_norm` | Gradient norm cap. |
 | `reg_coeff` | Regularization coefficient. |
 
-To run the 1st stage of CivilComments we used the Wilds implementation and hence run the
-following command
-```shell
-OMP_NUM_THREADS=4 python3 wilds_exps/run_expt.py --dataset civilcomments --algorithm ERM --root_dir /data/users/pavel_i/datasets/ --log_dir 'logs/bert_civilcomments_dfrdrop_2/' --seed 2 --dfr_reweighting_seed 2 --dfr_reweighting_drop --dfr_reweighting_frac 0.2 --model bert-base-uncased
-```
-similarly for MultiNLI we run
-```shell
-OMP_NUM_THREADS=4 python3 run_expt.py -s confounder -d MultiNLI -t gold_label_random -c sentence2_has_negation --lr 2e-05 --batch_size 32 --weight_decay 0 --model bert --n_epochs 3 --seed 1 --log_dir=logs/multinli/erm_dfrdrop1 --root_dir=/data/users/pavel_i/datasets/multinli/ --dfr_reweighting_drop --dfr_reweighting_seed=1 --dfr_reweighting_frac=0.2 --save_last --save_best
-```
-
 ## Examples
 
 To run AFR on Waterbirds use the following two commands.
@@ -213,6 +203,16 @@ To run AFR on CelebA use the following two commands.
 ```shell
 python3 train_supervised.py --use_wandb="" --output_dir=logs/celeba/80_123 --project=celeba --seed=123 --eval_freq=10 --save_freq=10 --data_dir='/datasets/CelebA' --data_transform=AugWaterbirdsCelebATransform --model='imagenet_resnet50_pretrained' --max_prop=1.0 --train_prop=80 --num_epochs=20 --batch_size=100 --optimizer=sgd_optimizer --scheduler=cosine_lr_scheduler --init_lr=3e-3 --weight_decay=1e-4
 python3 train_embeddings.py --use_wandb="" --output_dir=logs/celeba/emb --project=celeba --seed=1 --base_model_dir="./logs/celeba/80_123" --model='imagenet_resnet50_pretrained' --data_dir='/datasets/CelebA' --data_transform=AugWaterbirdsCelebATransform --num_epochs=100 --batch_size=128 --emb_batch_size=-1 --optimizer=sgd_optimizer --scheduler=constant_lr_scheduler --init_lr=0.01 --momentum=0.0 --weight_decay=0. --loss=fixed_cwxe --tune_on=train --train_prop=-0.2 --focal_loss_gamma=1.8 --num_augs=1 --grad_norm=0.0 --reg_coeff=0.00 --checkpoint=final_checkpoint.pt
+```
+
+To run the 1st stage of CivilComments we used the Wilds implementation and hence run the
+following command
+```shell
+OMP_NUM_THREADS=4 python3 wilds_exps/run_expt.py --dataset civilcomments --algorithm ERM --root_dir /data/users/pavel_i/datasets/ --log_dir 'logs/bert_civilcomments_dfrdrop_2/' --seed 2 --dfr_reweighting_seed 2 --dfr_reweighting_drop --dfr_reweighting_frac 0.2 --model bert-base-uncased
+```
+Similarly for the 1st stage of MultiNLI run
+```shell
+OMP_NUM_THREADS=4 python3 gdro_fork/run_expt.py -s confounder -d MultiNLI -t gold_label_random -c sentence2_has_negation --lr 2e-05 --batch_size 32 --weight_decay 0 --model bert --n_epochs 3 --seed 1 --log_dir=logs/multinli/erm_dfrdrop1 --root_dir=/data/users/pavel_i/datasets/multinli/ --dfr_reweighting_drop --dfr_reweighting_seed=1 --dfr_reweighting_frac=0.2 --save_last --save_best
 ```
 
 ## Data Access
