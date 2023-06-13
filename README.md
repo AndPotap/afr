@@ -202,11 +202,12 @@ Please follow the instructions in the [DFR repo](https://github.com/PolinaKirich
 
 ### CivilComments
 
-ToDo
+For CivilComments, we use the version of the dataset natively available in the [wilds package](https://wilds.stanford.edu/datasets/#civilcomments).
 
 ### MultiNLI
 
-ToDo
+To run experiments on the MultiNLI dataset, please manually download and unzip the dataset from [this link](https://nlp.stanford.edu/data/dro/multinli_bert_features.tar.gz).
+Further, please copy the `dataset_files/utils_glue.py` to the root directory of the dataset.
 
 ### Chest X-Ray
 
