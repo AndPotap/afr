@@ -210,7 +210,7 @@ def get_default_args():
     parser.add_argument("--weight_decay", type=float, default=0.0)
     parser.add_argument("--momentum", type=float, default=0.9)
     parser.add_argument("--init_lr", type=float, default=0.1)
-    parser.add_argument("--focal_loss_gamma", type=float, default=0)
+    parser.add_argument("--gamma", type=float, default=0)
     parser.add_argument("--gradient_starv_lam", type=float, default=0)
     parser.add_argument("--reweight_groups", action='store_true', help="reweight groups")
     parser.add_argument("--reweight_classes", action='store_true', help="reweight classes")
@@ -293,7 +293,7 @@ def get_minimal_args():
     parser.add_argument("--weight_decay", type=float, default=0.0)
     parser.add_argument("--momentum", type=float, default=0.9)
     parser.add_argument("--init_lr", type=float, default=0.1)
-    parser.add_argument("--focal_loss_gamma", type=float, default=0)
+    parser.add_argument("--gamma", type=float, default=0)
     parser.add_argument("--tune_on", type=str, default="train")
     parser.add_argument("--grad_norm", type=float, default=-1.)
     return parser

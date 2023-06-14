@@ -47,7 +47,7 @@ def train_embeddings(args):
     val_embeddings, _, val_groups, val_y = out_val
     embeddings, _, groups, y = out
     logits = classifier(embeddings).detach()
-    weights = get_exp_weights(logits, y, gamma=args.focal_loss_gamma)
+    weights = get_exp_weights(logits, y, gamma=args.gamma)
     # weights = get_dfr_correction(weights, groups)
     if args.rebalance_weights:
         weights = rebalance_weights(weights, y)
