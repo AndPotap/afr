@@ -277,7 +277,7 @@ def get_y_s(g, n_spurious=1):
 def prepare_logger(log_dir):
     logger = logging.getLogger(log_dir)
     logger.setLevel(logging.INFO)
-    fh = logging.FileHandler(log_dir + "info.log")
+    fh = logging.FileHandler(os.path.join(log_dir, "info.log"))
     fh.setLevel(logging.INFO)
     logger.addHandler(fh)
     ch = logging.StreamHandler()
@@ -317,9 +317,9 @@ def get_config_for_wandb(args):
 
 
 def log_inputs(defaults, log_dir):
-    with open(log_dir + 'meta.yaml', mode='w+') as f:
+    with open(os.path.join(log_dir, 'meta.yaml'), mode='w+') as f:
         yaml.dump(defaults, f, allow_unicode=True)
-    save_object(defaults, filepath=log_dir + 'defaults.pkl')
+    save_object(defaults, filepath=os.path.join(log_dir, 'defaults.pkl'))
 
 
 def get_default_args(func):
