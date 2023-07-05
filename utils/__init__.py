@@ -6,7 +6,6 @@ from .common_utils import get_default_args
 from .common_utils import get_data
 from .common_utils import count_parameters
 from .common_utils import get_data_2_steps
-from .common_utils import get_data_focal
 from .common_utils import get_shrinked_data
 from .common_utils import print_model_params_names
 from .common_utils import get_jtt_loader

@@ -20,6 +20,7 @@ from utils.general import print_time_taken
 
 
 def train_embeddings(args):
+    assert args.emb_batch_size == -1, f'AFR assumes full batch size (args.emb_batch_size = -1), but got {args.emb_batch_size}'
     tic = time.time()
     device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
     set_seed(args.seed)
@@ -48,7 +49,6 @@ def train_embeddings(args):
     embeddings, _, groups, y = out
     logits = classifier(embeddings).detach()
     weights = get_exp_weights(logits, y, gamma=args.gamma)
-    # weights = get_dfr_correction(weights, groups)
     if args.rebalance_weights:
         weights = rebalance_weights(weights, y)
     weights = normalize_weights(weights)
@@ -65,7 +65,7 @@ def train_embeddings(args):
     last_layer.train()
     optimizer = getattr(optimizers, args.optimizer)(last_layer, args)
     scheduler = getattr(optimizers, args.scheduler)(optimizer, args)
-    criterion = getattr(losses, args.loss)(args, weights)
+    criterion = getattr(losses, args.loss)()
 
     for epoch in range(args.num_epochs):
         all_logits = []

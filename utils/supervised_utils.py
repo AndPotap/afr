@@ -11,7 +11,6 @@ import utils
 from utils import AverageMeter
 from utils.logging import load_object
 from utils.logging import save_object
-from losses import focal_fn
 from losses import get_exp_weights
 
 _bar_format = '{l_bar}{bar:50}{r_bar}{bar:-10b}'
@@ -47,11 +46,11 @@ def normalize_weights(weights):
 
 
 def rebalance_weights(weights, targets):
-    w0 = (targets == 0).sum()
-    w1 = (targets == 1).sum()
-    weights[targets == 0] *= w1 / w0
-    # weights = weights.detach()
-    return weights
+    unique_classes = torch.unique(targets)
+    for c in unique_classes:
+        class_count = (targets == c).sum()
+        weights[targets == c] *= len(targets) / class_count
+    return weights.detach()
 
 
 def get_last_layer_model(init_weights):
@@ -361,37 +360,3 @@ def eval_model(model, test_loader_dict, device):
                 utils.update_dict(acc_groups, y, group, logits)
             results_dict[test_name] = acc_groups
     return results_dict
-
-
-def eval_model_focal(model, test_loader_dict, gamma, device):
-    model.eval()
-    results_dict = {}
-    focal_results = {}
-    with torch.no_grad():
-        for test_name, test_loader in test_loader_dict.items():
-            focal_dfs = []
-            acc_groups = {g_idx: AverageMeter() for g_idx in range(test_loader.dataset.n_groups)}
-            for x, y, g, p, f in tqdm.tqdm(test_loader, bar_format=_bar_format):
-                x, y, p = x.to(device), y.to(device), p.to(device)
-                logits = model(x)
-                loss = focal_fn(logits, y, gamma)
-                out = torch.stack((g.cpu(), loss.cpu())).T.numpy()
-                focal_dfs.append(pd.DataFrame(out, index=f))
-                utils.update_dict(acc_groups, y, g, logits)
-            results_dict[test_name] = acc_groups
-            focal_results[test_name] = pd.concat(focal_dfs)
-    return results_dict, focal_results
-
-
-def print_focal_stats(data, gamma):
-    mask = data.iloc[:, 1] > 0.
-    other = data[mask].to_numpy()
-    print(f"\nGamma = {gamma}")
-    print(f"  Total nonzero: {mask.sum():,d}")
-    groups = [int(vec.item()) for vec in np.unique(other[:, 0])]
-    for group in groups:
-        val = other[other[:, 0] == group]
-        print(f"  Count ({group}): {val.shape[0]:,d}")
-        print(f"  Sum   ({group}): {val.sum():1.3f}")
-        print(f"  Mean  ({group}): {val.mean():1.3f}")
-        print("  " + "-" * 50)

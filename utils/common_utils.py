@@ -139,11 +139,6 @@ def get_default_args():
     parser.add_argument(
         "--loss", type=str, default="cross_entropy", choices=[
             "cross_entropy",
-            "fixed_cwxe"
-            "mixed_loss",
-            "focal_loss",
-            "confidence_wxe",
-            "gs_loss",
         ])
     parser.add_argument("--data_dir", type=str, required=True, help="Train dataset directory")
     parser.add_argument("--train_prop", type=proportion, default=1)
@@ -196,7 +191,7 @@ def get_default_args():
     parser.add_argument("--eval_freq", type=int, default=50)
     parser.add_argument("--save_freq", type=int, default=50)
     parser.add_argument("--seed", type=int, default=1)
-    parser.add_argument("--use_wandb", type=bool, default=True)
+    parser.add_argument("--use_wandb", action="store_true", default=False)
     parser.add_argument("--batch_size", type=int, default=128)
     parser.add_argument("--num_epochs", type=int, default=300)
     parser.add_argument(
@@ -279,7 +274,7 @@ def get_minimal_args():
     parser.add_argument("--project", type=str, help="wandb project name")
     parser.add_argument("--output_dir", type=str, help="output directory")
     parser.add_argument("--seed", type=int, default=1)
-    parser.add_argument("--use_wandb", type=bool, default=True)
+    parser.add_argument("--use_wandb", action="store_true", default=False)
     parser.add_argument("--cmnist_spurious_corr", type=float, default=0.995)
     parser.add_argument("--num_epochs", type=int, default=300)
     parser.add_argument(
@@ -324,14 +319,9 @@ def get_traintwo_args():
 def get_embeddings_args():
     parser = get_minimal_args()
     parser.add_argument(
-        "--loss", type=str, default="cross_entropy", choices=[
+        "--loss", type=str, default="afr", choices=[
             "cross_entropy",
-            "fixed_cwxe",
-            "changing_cwxe",
-            "mixed_loss",
-            "focal_loss",
-            "confidence_wxe",
-            "gs_loss",
+            "afr",
         ])
     parser.add_argument("--checkpoint", type=str, default="final_checkpoint.pt")
     parser.add_argument("--reuse_embeddings", type=str2bool, default=True)
@@ -415,24 +405,6 @@ def get_shrinked_data(subset, data_dir, split, data_transform):
     dataset_cls = getattr(data, "ShrinkedSpuriousDataset")
     dataset = dataset_cls(basedir=data_dir, subset=subset, split=split, transform=transform)
     return dataset
-
-
-def get_data_focal(args, finetune_on_val=False):
-    transform_cls = getattr(data, args.data_transform)
-    train_transform = transform_cls(train=True)
-    test_transform = transform_cls(train=False)
-
-    dataset_cls = getattr(data, args.dataset)
-    trainset = dataset_cls(basedir=args.data_dir, split="train", transform=train_transform,
-                           prop=args.train_prop)
-
-    holdoutsets = {}
-    for split in ["val", "test"]:
-        transform = train_transform if (split == "val" and finetune_on_val) else test_transform
-        holdoutsets[split] = dataset_cls(basedir=args.data_dir, split=split, transform=transform)
-
-    return trainset, holdoutsets
-
 
 def get_data(args, finetune_on_val=False):
     transform_cls = getattr(data, args.data_transform)

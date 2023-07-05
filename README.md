@@ -49,7 +49,7 @@ The most important requirements are:
 * `PyTorch`. ML framework used in the project.
 * `transformers`. To load language models used for text benchmarks.
 * `timm`. To load vision models used for image benchmarks.
-* `wandb`. To run hyperparameter sweeps.
+* `wandb`. To perform logging and hyperparameter sweeps.
 
 It is also required that you have access to the datasets that you want to run as
 benchmarks.
@@ -116,7 +116,7 @@ OMP_NUM_THREADS=4 python3 train_supervised.py \
     --optimizer=sgd_optimizer \
     --scheduler=constant_lr_scheduler \
     --init_lr=0.003 \
-    --weight_decay=1e-4 \
+    --weight_decay=1e-4
 ```
 | Name | Description |
 | :------------ |  :-----------: |
@@ -139,82 +139,84 @@ OMP_NUM_THREADS=4 python3 train_supervised.py \
 ### Second Stage
 To run the second stage in our waterbirds example use the following command
 ```shell
-ARCH='imagenet_resnet50_pretrained'
-DATA_DIR='/datasets/waterbirds_official'
-SEED=1
-PROP=80
-TRAIN_PROP=$(($PROP - 100))
-BASE_MODEL="./logs/waterbirds/$PROP_$SEED"
-OMP_NUM_THREADS=4 python3 train_embeddings.py \
-    --output_dir=logs/waterbirds/emb \
-    --project=waterbirds \
-    --seed=21 \
-    --base_model_dir=${BASE_MODEL} \
-    --model=${ARCH} \
-    --data_dir=${DATA_DIR} \
-    --data_transform=AugWaterbirdsCelebATransform\
-    --num_epochs=500 \
-    --batch_size=128 \
-    --optimizer=sgd_optimizer \
-    --scheduler=constant_lr_scheduler \
-    --init_lr=0.02 \
-    --weight_decay=0. \
-    --loss=fixed_cwxe \
-    --train_prop=${TRAIN_PROP} \
-    --gamma=30 \
-    --num_augs=10 \
-    --grad_norm=1.0 \
-    --reg_coeff=0.0 \
+python3 train_embeddings.py \
+--use_wandb \
+--output_dir=logs/waterbirds/emb \
+--project=waterbirds \
+--seed=0 \
+--base_model_dir=<first_stage_checkpoint_dir> \
+--model=imagenet_resnet50_pretrained \
+--data_dir=/datasets/waterbirds_official \
+--data_transform=NoAugWaterbirdsCelebATransform \
+--num_augs=1 \
+--num_epochs=500 \
+--batch_size=128 \
+--emb_batch_size=-1 \
+--optimizer=sgd_optimizer \
+--scheduler=constant_lr_scheduler \
+--init_lr=0.01 \
+--momentum=0. \
+--weight_decay=0. \
+--grad_norm=1.0 \
+--loss=afr \
+--tune_on=train \
+--train_prop=-20 \
+--gamma=<afr_gamma> \
+--reg_coeff=<afr_lambda>
 ```
 | Name | Description |
 | :------------ |  :-----------: |
+| `use_wandb` | use wandb for logging (remove this flag if not using). |
 | `output_dir` | Specifies where the results are saved. |
 | `project` | Name of the wandb project. |
 | `seed` | Seed to use. |
 | `base_model_dir` | Location of the first stage checkpoint. |
 | `model` | Model architecture. |
 | `data_dir` | File path where the dataset is located. |
-| `data_transform` | Type of augmentation being used. |
+| `data_transform` | Type of augmentation being used to compute embeddings. |
+| `num_augs` | Number of augmentations to use for embeddings. |
 | `num_epochs` | Number of epochs to run. |
-| `batch_size` | Size of the mini-batches. |
+| `batch_size` | Size of the mini-batches for computing embeddings. |
 | `optimizer` | Type of optimizer to use. |
 | `scheduler` | Type of scheduler to use. |
 | `init_lr` | Initial learning rate (starting point for the scheduler). |
-| `weight_decay` | Weight decay value. |
-| `loss` | Name of loss function to be used. |
-| `train_prop` | % of train dataset use for 2nd stage (should be negative). |
-| `gamma` | Gamma value. |
-| `num_augs` | Number of augmentations to use for embeddings. |
-| `grad_norm` | Gradient norm cap. |
-| `reg_coeff` | Regularization coefficient. |
+| `weight_decay` | Weight decay value (should be 0). |
+| `loss` | Name of loss function to be used (should be afr). |
+| `train_prop` | % of train dataset use for 2nd stage (-x% means the last x%). |
+| `gamma` | $\gamma$ in AFR. |
+| `reg_coeff` | $\lambda$ in AFR for $\ell_2$ regularization to first stage checkpoint. |
+| `grad_norm` | Gradient norm cap (shouldb be 1). |
+
 
 ## Examples
 
-To run AFR on Waterbirds use the following two commands.
+### Waterbirds
 ```shell
-python3 train_supervised.py --use_wandb="" --output_dir=logs/waterbirds/80_21 --project=waterbirds --seed=21 --eval_freq=10 --save_freq=10 --data_dir='/datasets/waterbirds_official' --dataset=SpuriousDataset --data_transform=AugWaterbirdsCelebATransform --model='imagenet_resnet50_pretrained' --max_prop=1.0 --train_prop=80 --num_epochs=50 --batch_size=32 --optimizer=sgd_optimizer --scheduler=constant_lr_scheduler --init_lr=0.003 --weight_decay=1e-4
-python3 train_embeddings.py --use_wandb="" --output_dir=logs/waterbirds/emb --project=waterbirds --seed=98 --base_model_dir=./logs/waterbirds/80_21 --model=imagenet_resnet50_pretrained --data_dir=/datasets/waterbirds_official --data_transform=AugWaterbirdsCelebATransform --num_epochs=500 --batch_size=128 --emb_batch_size=-1 --optimizer=sgd_optimizer --scheduler=constant_lr_scheduler --init_lr=0.01 --momentum=0. --weight_decay=0. --loss=fixed_cwxe --tune_on=train --train_prop=-20 --gamma=10 --num_augs=1 --grad_norm=0.0 --reg_coeff=0.0
+# 1st stage
+python3 train_supervised.py --use_wandb --output_dir=logs/waterbirds/80_0 --project=waterbirds --seed=0 --eval_freq=10 --save_freq=10 --data_dir='/datasets/waterbirds_official' --dataset=SpuriousDataset --data_transform=AugWaterbirdsCelebATransform --model='imagenet_resnet50_pretrained' --max_prop=1.0 --train_prop=80 --num_epochs=50 --batch_size=32 --optimizer=sgd_optimizer --scheduler=constant_lr_scheduler --init_lr=0.003 --weight_decay=1e-4
+# 2nd stage
+python3 train_embeddings.py --use_wandb --output_dir=logs/waterbirds/emb --project=waterbirds --seed=0 --base_model_dir=logs/waterbirds/80_0 --model=imagenet_resnet50_pretrained --data_dir=/datasets/waterbirds_official --data_transform=NoAugWaterbirdsCelebATransform --num_epochs=500 --batch_size=128 --emb_batch_size=-1 --optimizer=sgd_optimizer --scheduler=constant_lr_scheduler --init_lr=0.01 --momentum=0. --weight_decay=0. --loss=afr --tune_on=train --train_prop=-20 --gamma=10 --num_augs=1 --grad_norm=1.0 --reg_coeff=0.0
 ```
-The first command runs the 1st stage of AFR and saves the checkpoint on
-`logs/waterbirds/80_21`.
-The second command runs the 2nd stage of AFR.
-We added the flag `--use_wandb=""` to avoid using wandb but in case you do want to use
-wandb simply take that flag out of the command.
-
-To run AFR on CelebA use the following two commands. 
+### CelebA
 ```shell
-python3 train_supervised.py --use_wandb="" --output_dir=logs/celeba/80_123 --project=celeba --seed=123 --eval_freq=10 --save_freq=10 --data_dir='/datasets/CelebA' --data_transform=AugWaterbirdsCelebATransform --model='imagenet_resnet50_pretrained' --max_prop=1.0 --train_prop=80 --num_epochs=20 --batch_size=100 --optimizer=sgd_optimizer --scheduler=cosine_lr_scheduler --init_lr=3e-3 --weight_decay=1e-4
-python3 train_embeddings.py --use_wandb="" --output_dir=logs/celeba/emb --project=celeba --seed=1 --base_model_dir="./logs/celeba/80_123" --model='imagenet_resnet50_pretrained' --data_dir='/datasets/CelebA' --data_transform=AugWaterbirdsCelebATransform --num_epochs=100 --batch_size=128 --emb_batch_size=-1 --optimizer=sgd_optimizer --scheduler=constant_lr_scheduler --init_lr=0.01 --momentum=0.0 --weight_decay=0. --loss=fixed_cwxe --tune_on=train --train_prop=-0.2 --gamma=1.8 --num_augs=1 --grad_norm=0.0 --reg_coeff=0.00 --checkpoint=final_checkpoint.pt
+# 1st stage
+python3 train_supervised.py --use_wandb --output_dir=logs/celeba/80_1 --project=celeba --seed=1 --eval_freq=10 --save_freq=10 --data_dir='/datasets/CelebA' --data_transform=AugWaterbirdsCelebATransform --model='imagenet_resnet50_pretrained' --max_prop=1.0 --train_prop=80 --num_epochs=20 --batch_size=100 --optimizer=sgd_optimizer --scheduler=cosine_lr_scheduler --init_lr=3e-3 --weight_decay=1e-4
+# 2nd stage
+python3 train_embeddings.py --use_wandb --output_dir=logs/celeba/emb --project=celeba --seed=0 --base_model_dir=logs/celeba/80_1 --model='imagenet_resnet50_pretrained' --data_dir='/datasets/CelebA' --data_transform=NoAugWaterbirdsCelebATransform --num_epochs=1000 --batch_size=128 --emb_batch_size=-1 --optimizer=sgd_optimizer --scheduler=constant_lr_scheduler --init_lr=0.02 --momentum=0.0 --weight_decay=0. --loss=afr --tune_on=train --train_prop=-0.2 --gamma=1.44 --num_augs=1 --grad_norm=1.0 --reg_coeff=0.001 --checkpoint=final_checkpoint.pt
 ```
 
-To run the 1st stage of CivilComments we used the Wilds implementation and hence run the
-following command
+### CivilComments
 ```shell
+# 1st stage
 OMP_NUM_THREADS=4 python3 wilds_exps/run_expt.py --dataset civilcomments --algorithm ERM --root_dir /data/users/pavel_i/datasets/ --log_dir 'logs/bert_civilcomments_dfrdrop_2/' --seed 2 --dfr_reweighting_seed 2 --dfr_reweighting_drop --dfr_reweighting_frac 0.2 --model bert-base-uncased
+# 2nd stage to be run in the notebook
 ```
-Similarly for the 1st stage of MultiNLI run
+
+### MultiNLI
 ```shell
+# 1st stage
 OMP_NUM_THREADS=4 python3 gdro_fork/run_expt.py -s confounder -d MultiNLI -t gold_label_random -c sentence2_has_negation --lr 2e-05 --batch_size 32 --weight_decay 0 --model bert --n_epochs 3 --seed 1 --log_dir=logs/multinli/erm_dfrdrop1 --root_dir=/data/users/pavel_i/datasets/multinli/ --dfr_reweighting_drop --dfr_reweighting_seed=1 --dfr_reweighting_frac=0.2 --save_last --save_best
+# 2nd stage to be run in the notebook
 ```
 
 ## Running AFR in a Notebook
